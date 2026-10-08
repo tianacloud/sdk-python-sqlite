@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tiana-sdk-sqlite"
+version = "0.1.0.dev1"
+description = "Async SQLite sessions over the Tiana Python transport"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+dependencies = ["tiana-sdk @ git+https://github.com/tianacloud/sdk-python.git@a2e08b958b3f8b43d72369035c756abc5715d1e7", "h11>=0.16,<1"]
+
+[project.urls]
+Repository = "https://github.com/tianacloud/sdk-python-sqlite"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tiana_sdk_sqlite"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "examples", "pyproject.toml", "README.md", "AGENTS.md", "LICENSE"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
