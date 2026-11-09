@@ -52,9 +52,10 @@ asyncio.run(main())
 ```
 
 Set `TIANA_ENDPOINT` to the complete Endpoint hostname provided for your database
-in either online or staging, such as
-`ep-01j5c9m7q2v8x4k6n3r0t1w2yz.db.example.test` (a placeholder).
-A bare Endpoint ID is rejected before connecting.
+in either online or staging. The online shape is
+`ep-00000000000000000000000000.ep.tianacloud.com` (a synthetic placeholder).
+Replace the entire hostname with your actual `fullEndpoint` from the Console;
+a bare Endpoint ID is rejected before connecting.
 
 Session is lazy: construction does not connect. The supplied Client remains
 caller-owned, and separate Sessions use independent tunnels. A session permits
