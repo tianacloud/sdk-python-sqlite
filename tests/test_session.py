@@ -4,11 +4,11 @@ import math
 import os
 import unittest
 
-from tiana_sdk import Client
+from tiana_sdk import Client, ConnectError
 
 from tiana_sdk_sqlite import MAX_BODY_BYTES, Error, Session, TransactionMode
 
-from .peer import ENDPOINT, Peer, closed, http, result
+from .peer import ENDPOINT, FIXTURES, Peer, closed, http, result
 
 
 class SessionTests(unittest.IsolatedAsyncioTestCase):
@@ -52,6 +52,7 @@ class SessionTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse(session.is_usable)
             self.assertIsNone(session.autocommit)
             self.assertEqual(peer.connects, 1)
+            self.assertEqual(peer.server_names, [ENDPOINT])
             self.assertEqual([r["baton"] for r in peer.requests], [None, "1", "2"])
             self.assertEqual(peer.requests[0]["requests"][0]["stmt"]["args"], wire)
             self.assertTrue(peer.requests[0]["requests"][0]["stmt"]["want_rows"])
@@ -317,6 +318,30 @@ class SessionTests(unittest.IsolatedAsyncioTestCase):
         async with Peer([result(closing=True)]) as peer:
             with self.assertRaises(Error):
                 await Session(peer.client).execute_and_close("select 1")
+
+    async def test_endpoint_validation_and_tls_verification(self):
+        async with Peer() as peer:
+            with self.assertRaises(ConnectError) as caught:
+                Client("ep-01j5c9m7q2v8x4k6n3r0t1w2yz", gateway_address=peer.address)
+            self.assertEqual(caught.exception.code, "INVALID_ENDPOINT")
+            self.assertEqual(peer.server_names, [])
+            for endpoint, ca_file in [
+                (ENDPOINT, None),
+                (
+                    ENDPOINT.replace(".db.example.test", ".other.example.test"),
+                    FIXTURES / "gateway.pem",
+                ),
+            ]:
+                async with Client(
+                    endpoint,
+                    gateway_address=peer.address,
+                    ca_file=ca_file,
+                    use_system_roots=ca_file is None,
+                ) as client:
+                    with self.assertRaises(Error) as error:
+                        await Session(client).execute("SELECT 1")
+                    self.assertEqual(error.exception.code, "CONNECT_FAILED")
+            self.assertEqual(peer.connects, 0)
 
     async def test_connect_failure_is_before_sql(self):
         server = await asyncio.start_server(lambda r, w: w.close(), "127.0.0.1", 0)

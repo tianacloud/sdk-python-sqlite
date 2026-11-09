@@ -1,6 +1,6 @@
 """TLS/H2 Gateway peer: scripted Hrana responses or a disposable App relay.
 
-Synthetic TLS fixtures copied from sdk-python b6307ce3; no production keys.
+Synthetic self-signed TLS fixture for example.test; no production keys.
 """
 
 import asyncio
@@ -17,7 +17,7 @@ from h2.exceptions import H2Error
 from tiana_sdk import Client
 
 FIXTURES = Path(__file__).parent / "fixtures"
-ENDPOINT = "ep-01j5c9m7q2v8x4k6n3r0t1w2yz.db.service.internal.tiana.com"
+ENDPOINT = "ep-01j5c9m7q2v8x4k6n3r0t1w2yz.db.example.test"
 TOKEN = "tia_" + "A" * 43
 
 
@@ -76,11 +76,13 @@ class Peer:
         self.writers = set()
         self.observed = asyncio.Queue()
         self.disconnected = asyncio.Event()
+        self.server_names = []
 
     async def __aenter__(self):
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         context.minimum_version = context.maximum_version = ssl.TLSVersion.TLSv1_3
         context.set_alpn_protocols(["h2"])
+        context.set_servername_callback(lambda _sock, name, _ctx: self.server_names.append(name))
         context.load_cert_chain(FIXTURES / "gateway.pem", FIXTURES / "gateway-key.pem")
         self.server = await asyncio.start_server(self.handle, "127.0.0.1", 0, ssl=context)
         self.address = self.server.sockets[0].getsockname()[:2]
@@ -136,6 +138,7 @@ class Peer:
                         self.connects += 1
                         headers = dict(event.headers)
                         assert headers[b":method"] == b"CONNECT"
+                        assert headers[b":authority"] == ENDPOINT.encode() + b":443"
                         assert headers[b"tiana-database-protocol"] == b"hrana-http"
                         assert headers[b"proxy-authorization"] == b"Bearer " + TOKEN.encode()
                         h2.send_headers(

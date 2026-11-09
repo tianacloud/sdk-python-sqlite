@@ -14,7 +14,7 @@ Configure these environment variables before running:
 
 | Variable | Meaning |
 | --- | --- |
-| `TIANA_ENDPOINT` | Required Endpoint hostname; determines TLS verification, SNI and CONNECT identity. |
+| `TIANA_ENDPOINT` | Required complete Endpoint hostname (not a bare ID), for online or staging; determines TLS verification, SNI and CONNECT identity. |
 | `TIANA_TOKEN` | Optional existing connection token; omit only when anonymous access is allowed. An explicitly empty token fails. |
 | `TIANA_CA_FILE` | Optional PEM CA file, added to the system trust roots. Certificate verification stays enabled. |
 | `TIANA_GATEWAY_ADDRESS` | Optional physical TCP destination, `host:port` or `[IPv6]:port`; does not change Endpoint identity. |
