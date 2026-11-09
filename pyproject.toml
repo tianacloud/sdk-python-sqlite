@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tiana-sdk-sqlite"
-version = "0.1.0.dev1"
+version = "1.0.1"
 description = "Async SQLite sessions over the Tiana Python transport"
 readme = "README.md"
 requires-python = ">=3.11"
