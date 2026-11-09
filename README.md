@@ -8,7 +8,7 @@ Requires Python 3.11 or later. No local engine or helper process is involved.
 ## Install and use
 
 The transport dependency is fetched from GitHub at immutable commit
-`674e4dcea0b12f843ea3c91365449a1df61b35ba` (merged core endpoint fix).
+`dd8cbca09f645bdebea18b9b0bdb542695744433` (merged core v1.0.1 release).
 The core SDK is fetched over HTTPS. If GitHub requires authentication, configure
 HTTPS credentials, then install this adapter from its checkout:
 
@@ -17,7 +17,7 @@ python -m pip install .
 ```
 
 Only this adapter's source is local; its declared `tiana-sdk` dependency resolves
-from `git+https://github.com/tianacloud/sdk-python.git@674e4dcea0b12f843ea3c91365449a1df61b35ba`.
+from `git+https://github.com/tianacloud/sdk-python.git@dd8cbca09f645bdebea18b9b0bdb542695744433`.
 No companion checkout, editable core install, local wheel or PYTHONPATH override
 is required. Built wheels retain the same remote dependency. Future upgrades
 require changing the pinned commit explicitly; no PyPI core release is required.
