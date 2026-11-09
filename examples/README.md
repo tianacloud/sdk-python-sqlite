@@ -1,12 +1,14 @@
 # Runnable SQLite example
 
 Requires Python 3.11+. From the repository root, install the adapter and its
-pinned remote transport dependency (see the root README for GitHub access):
+pinned remote transport dependency (see the root README for GitHub access).
+The hostname below is a synthetic online example, not an actual Endpoint. Before
+running the example, replace the entire hostname with your `fullEndpoint` from
+the Console:
 
 ```sh
 python -m pip install .
-export TIANA_ENDPOINT='ep-01j5c9m7q2v8x4k6n3r0t1w2yz.db.example.test'
-# Replace this placeholder with your actual Endpoint hostname.
+export TIANA_ENDPOINT='ep-00000000000000000000000000.ep.tianacloud.com'
 python examples/sqlite.py
 ```
 
@@ -14,7 +16,7 @@ Configure these environment variables before running:
 
 | Variable | Meaning |
 | --- | --- |
-| `TIANA_ENDPOINT` | Required Endpoint hostname; determines TLS verification, SNI and CONNECT identity. |
+| `TIANA_ENDPOINT` | Required complete Endpoint hostname (not a bare ID), for online or staging; determines TLS verification, SNI and CONNECT identity. |
 | `TIANA_TOKEN` | Optional existing connection token; omit only when anonymous access is allowed. An explicitly empty token fails. |
 | `TIANA_CA_FILE` | Optional PEM CA file, added to the system trust roots. Certificate verification stays enabled. |
 | `TIANA_GATEWAY_ADDRESS` | Optional physical TCP destination, `host:port` or `[IPv6]:port`; does not change Endpoint identity. |

@@ -9,7 +9,7 @@ description = "Async SQLite sessions over the Tiana Python transport"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
-dependencies = ["tiana-sdk @ git+https://github.com/tianacloud/sdk-python.git@a2e08b958b3f8b43d72369035c756abc5715d1e7", "h11>=0.16,<1"]
+dependencies = ["tiana-sdk @ git+https://github.com/tianacloud/sdk-python.git@674e4dcea0b12f843ea3c91365449a1df61b35ba", "h11>=0.16,<1"]
 
 [project.urls]
 Repository = "https://github.com/tianacloud/sdk-python-sqlite"

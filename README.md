@@ -8,7 +8,7 @@ Requires Python 3.11 or later. No local engine or helper process is involved.
 ## Install and use
 
 The transport dependency is fetched from GitHub at immutable commit
-`a2e08b958b3f8b43d72369035c756abc5715d1e7` (v1.0.0 release commit).
+`674e4dcea0b12f843ea3c91365449a1df61b35ba` (merged core endpoint fix).
 The core SDK is fetched over HTTPS. If GitHub requires authentication, configure
 HTTPS credentials, then install this adapter from its checkout:
 
@@ -17,7 +17,7 @@ python -m pip install .
 ```
 
 Only this adapter's source is local; its declared `tiana-sdk` dependency resolves
-from `git+https://github.com/tianacloud/sdk-python.git@a2e08b958b3f8b43d72369035c756abc5715d1e7`.
+from `git+https://github.com/tianacloud/sdk-python.git@674e4dcea0b12f843ea3c91365449a1df61b35ba`.
 No companion checkout, editable core install, local wheel or PYTHONPATH override
 is required. Built wheels retain the same remote dependency. Future upgrades
 require changing the pinned commit explicitly; no PyPI core release is required.
@@ -50,6 +50,12 @@ async def main():
 
 asyncio.run(main())
 ```
+
+Set `TIANA_ENDPOINT` to the complete Endpoint hostname provided for your database
+in either online or staging. The online shape is
+`ep-00000000000000000000000000.ep.tianacloud.com` (a synthetic placeholder).
+Replace the entire hostname with your actual `fullEndpoint` from the Console;
+a bare Endpoint ID is rejected before connecting.
 
 Session is lazy: construction does not connect. The supplied Client remains
 caller-owned, and separate Sessions use independent tunnels. A session permits
@@ -147,5 +153,6 @@ TIANA_SQLITE_TEST_ADDRESS=127.0.0.1:18080 python -m unittest discover -k real_ap
 It creates `python_sdk_test` in that disposable database and checks real reads,
 writes, transaction isolation, rollback, savepoints, commit, constraint errors,
 close rollback and committed rows from a fresh session. Do not point it at an
-existing or production database. Synthetic test certificates originate from
-sdk-python b6307ce3; no production credentials are included.
+existing or production database. The synthetic test certificate and key were
+generated with OpenSSL for the reserved `example.test` domain and are self-signed
+for the local fixture only; no production credentials are included.
